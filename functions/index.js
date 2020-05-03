@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://admin:<password>@cluster0-unmnl.gcp.mongodb.net/test?retryWrites=true&w=majority";
+const uri = "mongodb+srv://admin:March1678%3F@cluster0-unmnl.gcp.mongodb.net/test?retryWrites=true&w=majority";
 
 /*
 Simple test function to demonstrate how our functions will be called. 
@@ -20,17 +20,21 @@ exports.test = functions.https.onCall((data, context) => {
  */
 exports.databaseTest = functions.https.onCall((data, context) => {
     return new Promise(async function(resolve, reject) {
-        const client = new MongoClient(uri, { useNewUrlParser: true });
-        client.connect(err => {
-            //if(err) return reject('Error connecting to MongoDb');
-            const collection = client.db("TEST").collection("CS488");
-            //This way we fetch full collection
-            collection.find({}).toArray(function(err, docs) {
-                //if(err) return reject('Error connecting to CS488 collection.');
-                client.close();
-                //This returns JSON list basically
-                return resolve(docs);
-            });
-        });
-    });
+        MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, db) {
+            if(err) {
+                console.log("Error connecting to DB");
+                db.close();
+                return reject('ERROR');
+            }
+            else 
+            {
+                db.db('TEST').collection('CS488')
+                .find({})
+                .toArray(function(err, docs) {
+                    db.close();
+                    resolve(docs);  //Send back array of conferences (data)
+                });
+            }
+        }) 
+    })
 });

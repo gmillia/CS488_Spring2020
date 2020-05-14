@@ -179,3 +179,31 @@ exports.getFightersByWeightRange = functions.https.onCall((data, context) => {
         }) 
     })
 });
+
+/**
+ * Function that searches Fighters collection for fighters in particular height range
+ * 
+ * @returns {Promise} - Promise object contains JSON list with all the fighters from particular height range
+ */
+exports.getFightersByHeightRange = functions.https.onCall((data, context) => {
+    return new Promise(async function(resolve, reject) {
+        let minHeight = data.minHeight;
+        let maxHeight = data.maxHeight;
+        MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, db) {
+            if(err) {
+                console.log("Error connecting to DB");
+                db.close();
+                return reject('ERROR: ' + err);
+            }
+            else 
+            {
+                db.db('UFC').collection('Fighters')
+                .find({ "height": {"$gt": minHeight, "$lt": maxHeight} }, { projection: { _id: 0, url: 0 }})
+                .toArray(function(err, fighterList) {
+                    db.close();
+                    resolve(fighterList); 
+                });
+            }
+        }) 
+    })
+});

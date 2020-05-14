@@ -19,9 +19,9 @@ exports.getAllFighters = functions.https.onCall((data, context) => {
             {
                 db.db('UFC').collection('Fighters')
                 .find({}, { projection: { _id: 0, url: 0 }})
-                .toArray(function(err, docs) {
+                .toArray(function(err, fightersList) {
                     db.close();
-                    resolve(docs);  //Send back array of conferences (data)
+                    resolve(fightersList); 
                 });
             }
         }) 
@@ -51,3 +51,54 @@ exports.getFighterById = functions.https.onCall((data, context) => {
         }) 
     });
 })
+
+/**
+ * Function that searches Fighters database for a fighter by their name
+ * 
+ * @returns {Promise} - Promise object contains JSON for the fighter
+ */
+exports.getFighterByName = functions.https.onCall((data, context) => {
+    return new Promise(async function(resolve, reject) {
+        let fighterName = data.fighterName;
+        MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, db) {
+            if(err) {
+                console.log("Error connecting to DB");
+                db.close();
+                return reject('ERROR: ' + err);
+            }
+            else 
+            {
+                db.db('UFC').collection('Fighters')
+                .findOne({"name": fighterName}, { projection: { _id: 0, url: 0 }})
+                .then(fighter => resolve(fighter));
+            }
+        }) 
+    });
+})
+
+/**
+ * Function that searches Fighters collection for fighters by particular country
+ * 
+ * @returns {Promise} - Promise object contains JSON list with all the fighters from particular country
+ */
+exports.getFightersByCountry = functions.https.onCall((data, context) => {
+    return new Promise(async function(resolve, reject) {
+        let country = data.country;
+        MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, db) {
+            if(err) {
+                console.log("Error connecting to DB");
+                db.close();
+                return reject('ERROR: ' + err);
+            }
+            else 
+            {
+                db.db('UFC').collection('Fighters')
+                .find({ "country": country }, { projection: { _id: 0, url: 0 }})
+                .toArray(function(err, fighterList) {
+                    db.close();
+                    resolve(fighterList); 
+                });
+            }
+        }) 
+    })
+});

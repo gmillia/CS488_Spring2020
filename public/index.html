@@ -15,8 +15,7 @@
 	</head>
 
 	<body>
-		<button id='testBtn' style='background:green;width: 100px; height: 100px;'>SIMPLE TEST</button>
-		<button id='dbTestBtn' style='background:black; color: white; width: 100px; height: 100px;'>DB TEST</button>
+		<button id='testBtn' style='background:green;width: 100px; height: 100px;'>Get all fighters</button>
 
 		<!--TEST script to demonstrate how to access server-side functions-->
 		<script>
@@ -26,19 +25,15 @@
 				let testBtn = document.getElementById('testBtn');
 				testBtn.addEventListener('click', async function () {
 					//Get the function we need to use
-					let serverFunction = functions.httpsCallable('test');
+					let getAllFighters = functions.httpsCallable('fighters-getAllFighters');
 					//Use it
-					let serverMessage = await serverFunction({ 'message': 'I got tested.' });
-					console.log(serverMessage);
-				});
-
-				//db button
-				let dbBtn = document.getElementById('dbTestBtn');
-				dbBtn.addEventListener('click', async function() {
-					let serverFunction = functions.httpsCallable('databaseTest');
-					let serverMessage = await serverFunction();
-					//Should return full collection, which consists of only 1 document
-					console.log(serverMessage);
+					await getAllFighters()
+					.then(fighters => {
+						console.log(fighters);
+					})
+					.catch(err => {
+						console.log(err);
+					});
 				});
 			}
 		</script>

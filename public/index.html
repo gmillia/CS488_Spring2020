@@ -23,6 +23,8 @@
 		<button id='fightersByWeightClassBtn' style='background:blue;width: 100px; height: 100px;'>Get fighters by weight class</button>
 		<button id='fightersByWeightRangeBtn' style='background:grey;width: 100px; height: 100px;'>Get fighters by weight range</button>
 		<button id='fightersByHeightRangeBtn' style='background:rgb(33, 131, 134);width: 100px; height: 100px;'>Get fighters by height range</button>
+		<button id='allMethodCountsBtn' style='background:rgb(221, 26, 107);width: 100px; height: 100px;'>Get fight counts by method</button>
+		<button id='allMethodDefinitionCountsBtn' style='background:rgb(50, 88, 55);width: 100px; height: 100px;'>Get fight counts by method</button>
 
 		<!--TEST script to demonstrate how to access server-side functions-->
 		<script>
@@ -151,6 +153,36 @@
 					await getFightersByHeightRange({ "minHeight": minHeight, "maxHeight": maxHeight })
 					.then(fighters => {
 						console.log(fighters);
+					})
+					.catch(err => {
+						console.log(err);
+					});
+				});
+				/*###########################################################################*/
+				//All Fighters button
+				let allMethodCountsBtn = document.getElementById('allMethodCountsBtn');
+				allMethodCountsBtn.addEventListener('click', async function () {
+					//Get the function we need to use
+					let getAllMethodCounts = functions.httpsCallable('fights-getAllMethodCounts');
+					//Use it
+					await getAllMethodCounts()
+					.then(fightSet => {
+						console.log(fightSet);
+					})
+					.catch(err => {
+						console.log(err);
+					});
+				});
+				/*###########################################################################*/
+				//All Fighters button
+				let allMethodDefinitionCountsBtn = document.getElementById('allMethodDefinitionCountsBtn');
+				allMethodDefinitionCountsBtn.addEventListener('click', async function () {
+					//Get the function we need to use
+					let getAllMethodDefinitionCounts = functions.httpsCallable('fights-getAllMethodDefinitionCounts');
+					//Use it
+					await getAllMethodDefinitionCounts()
+					.then(fightSet => {
+						console.log(fightSet);
 					})
 					.catch(err => {
 						console.log(err);

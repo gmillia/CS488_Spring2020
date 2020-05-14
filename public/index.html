@@ -21,6 +21,7 @@
 		<button id='fighterByNameBtn' style='background: yellow;width: 100px; height: 100px;'>Get fighter by name</button>
 		<button id='fightersByCountryBtn' style='background:red;width: 100px; height: 100px;'>Get fighters by country</button>
 		<button id='fightersByWeightClassBtn' style='background:blue;width: 100px; height: 100px;'>Get fighters by weight class</button>
+		<button id='fightersByWeightRangeBtn' style='background:grey;width: 100px; height: 100px;'>Get fighters by weight range</button>
 
 		<!--TEST script to demonstrate how to access server-side functions-->
 		<script>
@@ -112,7 +113,24 @@
 					//Get the function we need to use
 					let getFightersByWeightClass = functions.httpsCallable('fighters-getFightersByWeightClass');
 					//Use it
-					await getFightersByWeightClass({ "class": weightClass })
+					await getFightersByWeightClass({ "weightClass": weightClass })
+					.then(fighters => {
+						console.log(fighters);
+					})
+					.catch(err => {
+						console.log(err);
+					});
+				});
+				/*###########################################################################*/
+				//All Fighters button
+				let fightersByWeightRangeBtn = document.getElementById('fightersByWeightRangeBtn');
+				fightersByWeightRangeBtn.addEventListener('click', async function () {
+					let minWeight = 155;
+					let maxWeight = 160;
+					//Get the function we need to use
+					let getFightersByWeightRange = functions.httpsCallable('fighters-getFightersByWeightRange');
+					//Use it
+					await getFightersByWeightRange({ "minWeight": minWeight, "maxWeight": maxWeight })
 					.then(fighters => {
 						console.log(fighters);
 					})

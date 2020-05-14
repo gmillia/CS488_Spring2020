@@ -1,6 +1,17 @@
+/**
+ * File contains functions (API) to interact with Fights Collection
+ * 
+ * @author Illia Shershun
+ * @since 05/13/2020
+ */
+
 const functions = require('firebase-functions');
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://admin:March1678%3F@cluster0-unmnl.gcp.mongodb.net/test?retryWrites=true&w=majority";
+
+/*#########################################################################################*/
+/*GET ALL FUNCTION#########################################################GET ALL FUNCTION*/
+/*#########################################################################################*/
 
 /**
  * Function connects to db and fetches full Fighters collection
@@ -27,3 +38,31 @@ exports.getAllFights = functions.https.onCall((data, context) => {
         }) 
     })
 });
+
+/*#########################################################################################*/
+/*SPECIFIC FUNCTIONS#####################################################SPECIFIC FUNCTIONS*/
+/*#########################################################################################*/
+
+/**
+ * Function that searches Fighters database for a fighter by their id
+ * 
+ * @returns {Promise} - Promise object contains JSON for the fighter
+ */
+exports.getFightsByFighterName = functions.https.onCall((data, context) => {
+    return new Promise(async function(resolve, reject) {
+        let fighterId = data.fighterId;
+        MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, db) {
+            if(err) {
+                console.log("Error connecting to DB");
+                db.close();
+                return reject('ERROR: ' + err);
+            }
+            else 
+            {
+                db.db('UFC').collection('Fights')
+                .findOne({"fid": fighterId}, { projection: { _id: 0, url: 0 }})
+                .then(fighter => resolve(fighter));
+            }
+        }) 
+    });
+})

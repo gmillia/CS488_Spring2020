@@ -2,8 +2,9 @@
  * File contains functions (API) to interact with Fighters collection
  * 
  * @author Illia Shershun
- * @since 5/13/2020
+ * @since 05/13/2020
  */
+
 const functions = require('firebase-functions');
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://admin:March1678%3F@cluster0-unmnl.gcp.mongodb.net/test?retryWrites=true&w=majority";

@@ -7,7 +7,7 @@ const uri = "mongodb+srv://admin:March1678%3F@cluster0-unmnl.gcp.mongodb.net/tes
  * 
  * @returns {Promise} - returns a list of all fighters from Fighters collection
  */
-exports.getAllFighters = functions.https.onCall((data, context) => {
+exports.getAllFights = functions.https.onCall((data, context) => {
     return new Promise(async function(resolve, reject) {
         MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, db) {
             if(err) {
@@ -17,8 +17,8 @@ exports.getAllFighters = functions.https.onCall((data, context) => {
             }
             else 
             {
-                db.db('UFC').collection('Fighters')
-                .find({}, { '_id': 0})
+                db.db('UFC').collection('Fights')
+                .find({}, {'_id': 0})
                 .toArray(function(err, docs) {
                     db.close();
                     resolve(docs);  //Send back array of conferences (data)

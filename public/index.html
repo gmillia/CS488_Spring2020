@@ -15,15 +15,15 @@
 	</head>
 
 	<body>
-		<button id='testBtn' style='background:green;width: 100px; height: 100px;'>Get all fighters</button>
+		<button id='allFightersBtm' style='background:green;width: 100px; height: 100px;'>Get all fighters</button>
 
 		<!--TEST script to demonstrate how to access server-side functions-->
 		<script>
 			var functions = firebase.functions();
 			window.onload = function () {
-				//test btn
-				let testBtn = document.getElementById('testBtn');
-				testBtn.addEventListener('click', async function () {
+				//All Fighters button
+				let allFightersBtn = document.getElementById('allFightersBtn');
+				allFightersBtn.addEventListener('click', async function () {
 					//Get the function we need to use
 					let getAllFighters = functions.httpsCallable('fighters-getAllFighters');
 					//Use it

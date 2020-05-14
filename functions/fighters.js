@@ -1,3 +1,9 @@
+/**
+ * File contains functions (API) to interact with Fighters collection
+ * 
+ * @author Illia Shershun
+ * @since 5/13/2020
+ */
 const functions = require('firebase-functions');
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://admin:March1678%3F@cluster0-unmnl.gcp.mongodb.net/test?retryWrites=true&w=majority";
@@ -94,6 +100,33 @@ exports.getFightersByCountry = functions.https.onCall((data, context) => {
             {
                 db.db('UFC').collection('Fighters')
                 .find({ "country": country }, { projection: { _id: 0, url: 0 }})
+                .toArray(function(err, fighterList) {
+                    db.close();
+                    resolve(fighterList); 
+                });
+            }
+        }) 
+    })
+});
+
+/**
+ * Function that searches Fighters collection for fighters by particular weight class
+ * 
+ * @returns {Promise} - Promise object contains JSON list with all the fighters from particular weight class
+ */
+exports.getFightersByWeightClass = functions.https.onCall((data, context) => {
+    return new Promise(async function(resolve, reject) {
+        let weightClass = data.weightClass;
+        MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, db) {
+            if(err) {
+                console.log("Error connecting to DB");
+                db.close();
+                return reject('ERROR: ' + err);
+            }
+            else 
+            {
+                db.db('UFC').collection('Fighters')
+                .find({ "class": weightClass }, { projection: { _id: 0, url: 0 }})
                 .toArray(function(err, fighterList) {
                     db.close();
                     resolve(fighterList); 

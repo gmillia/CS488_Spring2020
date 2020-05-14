@@ -20,6 +20,7 @@
 		<button id='fighterByIdBtn' style='background: orange;width: 100px; height: 100px;'>Get fighter by fid</button>
 		<button id='fighterByNameBtn' style='background: yellow;width: 100px; height: 100px;'>Get fighter by name</button>
 		<button id='fightersByCountryBtn' style='background:red;width: 100px; height: 100px;'>Get fighters by country</button>
+		<button id='fightersByWeightClassBtn' style='background:blue;width: 100px; height: 100px;'>Get fighters by weight class</button>
 
 		<!--TEST script to demonstrate how to access server-side functions-->
 		<script>
@@ -96,6 +97,22 @@
 					let getFightersByCountry = functions.httpsCallable('fighters-getFightersByCountry');
 					//Use it
 					await getFightersByCountry({ "country": country })
+					.then(fighters => {
+						console.log(fighters);
+					})
+					.catch(err => {
+						console.log(err);
+					});
+				});
+				/*###########################################################################*/
+				//All Fighters button
+				let fightersByWeightClassBtn = document.getElementById('fightersByWeightClassBtn');
+				fightersByWeightClassBtn.addEventListener('click', async function () {
+					let weightClass = "Heavyweight"
+					//Get the function we need to use
+					let getFightersByWeightClass = functions.httpsCallable('fighters-getFightersByWeightClass');
+					//Use it
+					await getFightersByWeightClass({ "class": weightClass })
 					.then(fighters => {
 						console.log(fighters);
 					})

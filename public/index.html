@@ -15,12 +15,15 @@
 	</head>
 
 	<body>
-		<button id='allFightersBtm' style='background:green;width: 100px; height: 100px;'>Get all fighters</button>
+		<button id='allFightersBtn' style='background:green;width: 100px; height: 100px;'>Get all fighters</button>
+		<button id='allFightsBtn' style='background: brown;width: 100px; height: 100px;'>Get all fights</button>
+		<button id='fighterByIdBtn' style='background: orange;width: 100px; height: 100px;'>Get fighter by fid</button>
 
 		<!--TEST script to demonstrate how to access server-side functions-->
 		<script>
 			var functions = firebase.functions();
 			window.onload = function () {
+				/*###########################################################################*/
 				//All Fighters button
 				let allFightersBtn = document.getElementById('allFightersBtn');
 				allFightersBtn.addEventListener('click', async function () {
@@ -35,6 +38,37 @@
 						console.log(err);
 					});
 				});
+				/*###########################################################################*/
+				//All fights button
+				let allFightsBtn = document.getElementById('allFightsBtn');
+				allFightsBtn.addEventListener('click', async function () {
+					//Get the function we need to use
+					let getAllFights = functions.httpsCallable('fights-getAllFights');
+					//Use it
+					await getAllFights()
+					.then(fights => {
+						console.log(fights);
+					})
+					.catch(err => {
+						console.log(err);
+					});
+				});
+				/*###########################################################################*/
+				//Single fighter by id
+				let fighterByIdBtn = document.getElementById('fighterByIdBtn');
+				fighterByIdBtn.addEventListener('click', async function () {
+					//Get the function we need to use
+					let getFighterById = functions.httpsCallable('fighters-getFighterById');
+					//Use it
+					await getFighterById({"fighterId": 29688})
+					.then(fighter => {
+						console.log(fighter);
+					})
+					.catch(err => {
+						console.log(err);
+					});
+				});
+				/*###########################################################################*/
 			}
 		</script>
 	</body>

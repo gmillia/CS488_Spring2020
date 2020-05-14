@@ -18,7 +18,7 @@ exports.getAllFighters = functions.https.onCall((data, context) => {
             else 
             {
                 db.db('UFC').collection('Fighters')
-                .find({}, { '_id': 0})
+                .find({}, { projection: { _id: 0, url: 0 }})
                 .toArray(function(err, docs) {
                     db.close();
                     resolve(docs);  //Send back array of conferences (data)
@@ -27,3 +27,27 @@ exports.getAllFighters = functions.https.onCall((data, context) => {
         }) 
     })
 });
+
+/**
+ * Function that searches Fighters database for a fighter by their id
+ * 
+ * @returns {Promise} - Promise object contains JSON for the fighter
+ */
+exports.getFighterById = functions.https.onCall((data, context) => {
+    return new Promise(async function(resolve, reject) {
+        let fighterId = data.fighterId;
+        MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, db) {
+            if(err) {
+                console.log("Error connecting to DB");
+                db.close();
+                return reject('ERROR: ' + err);
+            }
+            else 
+            {
+                db.db('UFC').collection('Fighters')
+                .findOne({"fid": fighterId}, { projection: { _id: 0, url: 0 }})
+                .then(fighter => resolve(fighter));
+            }
+        }) 
+    });
+})

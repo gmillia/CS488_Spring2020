@@ -18,7 +18,7 @@ exports.getAllFights = functions.https.onCall((data, context) => {
             else 
             {
                 db.db('UFC').collection('Fights')
-                .find({}, {'_id': 0})
+                .find({}, { projection: { _id: 0, pageurl: 0, f1pageurl: 0, f2pageurl: 0}})
                 .toArray(function(err, docs) {
                     db.close();
                     resolve(docs);  //Send back array of conferences (data)

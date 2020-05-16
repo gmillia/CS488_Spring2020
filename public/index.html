@@ -1,196 +1,320 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="/__/firebase/7.14.2/firebase-app.js"></script>
+    <script src="/__/firebase/7.14.2/firebase-functions.js"></script>
 
-		<!-- The core Firebase JS SDK is always required and must be listed first -->
-		<script src="/__/firebase/7.14.2/firebase-app.js"></script>
-		<script src="/__/firebase/7.14.2/firebase-functions.js"></script>
+    <!-- Initialize Firebase -->
+    <script src="/__/firebase/init.js"></script>
+  </head>
 
-		<!-- Initialize Firebase -->
-		<script src="/__/firebase/init.js"></script>
+  <body>
+    <button
+      id="allFightersBtn"
+      style="background:green;width: 100px; height: 100px;"
+    >
+      Get all fighters
+    </button>
+    <button
+      id="allFightsBtn"
+      style="background: brown;width: 100px; height: 100px;"
+    >
+      Get all fights
+    </button>
+    <button
+      id="fighterByIdBtn"
+      style="background: orange;width: 100px; height: 100px;"
+    >
+      Get fighter by fid
+    </button>
+    <button
+      id="fighterByNameBtn"
+      style="background: yellow;width: 100px; height: 100px;"
+    >
+      Get fighter by name
+    </button>
+    <button
+      id="fightersByCountryBtn"
+      style="background:red;width: 100px; height: 100px;"
+    >
+      Get fighters by country
+    </button>
+    <button
+      id="fightersByWeightClassBtn"
+      style="background:blue;width: 100px; height: 100px;"
+    >
+      Get fighters by weight class
+    </button>
+    <button
+      id="fightersByWeightRangeBtn"
+      style="background:grey;width: 100px; height: 100px;"
+    >
+      Get fighters by weight range
+    </button>
+    <button
+      id="fightersByHeightRangeBtn"
+      style="background:rgb(33, 131, 134);width: 100px; height: 100px;"
+    >
+      Get fighters by height range
+    </button>
+    <button
+      id="allMethodCountsBtn"
+      style="background:rgb(221, 26, 107);width: 100px; height: 100px;"
+    >
+      Get fight counts by method
+    </button>
+    <button
+      id="allMethodDefinitionCountsBtn"
+      style="background:rgb(50, 88, 55);width: 100px; height: 100px;"
+    >
+      Get fight counts by method
+    </button>
+    <div id="results">Results test</div>
+    <!--TEST script to demonstrate how to access server-side functions-->
+    <script>
+      // This variable will hold fighter data we get with the the getAllFighters function.
 
-	</head>
+      // Used to print an array of fighters.
+      function dataToArray(resultsDiv, fighterArray) {
+        let fighters = "";
 
-	<body>
-		<button id='allFightersBtn' style='background:green;width: 100px; height: 100px;'>Get all fighters</button>
-		<button id='allFightsBtn' style='background: brown;width: 100px; height: 100px;'>Get all fights</button>
-		<button id='fighterByIdBtn' style='background: orange;width: 100px; height: 100px;'>Get fighter by fid</button>
-		<button id='fighterByNameBtn' style='background: yellow;width: 100px; height: 100px;'>Get fighter by name</button>
-		<button id='fightersByCountryBtn' style='background:red;width: 100px; height: 100px;'>Get fighters by country</button>
-		<button id='fightersByWeightClassBtn' style='background:blue;width: 100px; height: 100px;'>Get fighters by weight class</button>
-		<button id='fightersByWeightRangeBtn' style='background:grey;width: 100px; height: 100px;'>Get fighters by weight range</button>
-		<button id='fightersByHeightRangeBtn' style='background:rgb(33, 131, 134);width: 100px; height: 100px;'>Get fighters by height range</button>
-		<button id='allMethodCountsBtn' style='background:rgb(221, 26, 107);width: 100px; height: 100px;'>Get fight counts by method</button>
-		<button id='allMethodDefinitionCountsBtn' style='background:rgb(50, 88, 55);width: 100px; height: 100px;'>Get fight counts by method</button>
+        if (fighterArray.length == 0) {
+          fighters = "No fighters found";
+        } else {
+          for (let i in fighterArray) {
+            fighters =
+              fighters + JSON.stringify(fighterArray[i]) + "<br><br><br>";
+          }
+        }
 
-		<!--TEST script to demonstrate how to access server-side functions-->
-		<script>
-			var functions = firebase.functions();
-			window.onload = function () {
-				/*###########################################################################*/
-				//All Fighters button
-				let allFightersBtn = document.getElementById('allFightersBtn');
-				allFightersBtn.addEventListener('click', async function () {
-					//Get the function we need to use
-					let getAllFighters = functions.httpsCallable('fighters-getAllFighters');
-					//Use it
-					await getAllFighters()
-					.then(fighters => {
-						console.log(fighters);
-					})
-					.catch(err => {
-						console.log(err);
-					});
-				});
-				/*###########################################################################*/
-				//All fights button
-				let allFightsBtn = document.getElementById('allFightsBtn');
-				allFightsBtn.addEventListener('click', async function () {
-					//Get the function we need to use
-					let getAllFights = functions.httpsCallable('fights-getAllFights');
-					//Use it
-					await getAllFights()
-					.then(fights => {
-						console.log(fights);
-					})
-					.catch(err => {
-						console.log(err);
-					});
-				});
-				/*###########################################################################*/
-				//Single fighter by id
-				let fighterByIdBtn = document.getElementById('fighterByIdBtn');
-				fighterByIdBtn.addEventListener('click', async function () {
-					let fighterId = 29688
-					//Get the function we need to use
-					let getFighterById = functions.httpsCallable('fighters-getFighterById');
-					//Use it
-					await getFighterById({"fighterId": fighterId})
-					.then(fighter => {
-						console.log(fighter);
-					})
-					.catch(err => {
-						console.log(err);
-					});
-				});
-				/*###########################################################################*/
-				//Single fighter by name
-				let fighterByNameBtn = document.getElementById('fighterByNameBtn');
-				fighterByNameBtn.addEventListener('click', async function () {
-					let fighterName = "Jon Jones";
-					//Get the function we need to use
-					let getFighterByName = functions.httpsCallable('fighters-getFighterByName');
-					//Use it
-					await getFighterByName({"fighterName": fighterName})
-					.then(fighter => {
-						console.log(fighter);
-					})
-					.catch(err => {
-						console.log(err);
-					});
-				});
-				/*###########################################################################*/
-				//All Fighters button
-				let fightersByCountryBtn = document.getElementById('fightersByCountryBtn');
-				fightersByCountryBtn.addEventListener('click', async function () {
-					let country = "USA"
-					//Get the function we need to use
-					let getFightersByCountry = functions.httpsCallable('fighters-getFightersByCountry');
-					//Use it
-					await getFightersByCountry({ "country": country })
-					.then(fighters => {
-						console.log(fighters);
-					})
-					.catch(err => {
-						console.log(err);
-					});
-				});
-				/*###########################################################################*/
-				//All Fighters button
-				let fightersByWeightClassBtn = document.getElementById('fightersByWeightClassBtn');
-				fightersByWeightClassBtn.addEventListener('click', async function () {
-					let weightClass = "Heavyweight"
-					//Get the function we need to use
-					let getFightersByWeightClass = functions.httpsCallable('fighters-getFightersByWeightClass');
-					//Use it
-					await getFightersByWeightClass({ "weightClass": weightClass })
-					.then(fighters => {
-						console.log(fighters);
-					})
-					.catch(err => {
-						console.log(err);
-					});
-				});
-				/*###########################################################################*/
-				//All Fighters button
-				let fightersByWeightRangeBtn = document.getElementById('fightersByWeightRangeBtn');
-				fightersByWeightRangeBtn.addEventListener('click', async function () {
-					let minWeight = 155;
-					let maxWeight = 160;
-					//Get the function we need to use
-					let getFightersByWeightRange = functions.httpsCallable('fighters-getFightersByWeightRange');
-					//Use it
-					await getFightersByWeightRange({ "minWeight": minWeight, "maxWeight": maxWeight })
-					.then(fighters => {
-						console.log(fighters);
-					})
-					.catch(err => {
-						console.log(err);
-					});
-				});
-				/*###########################################################################*/
-				//All Fighters button
-				let fightersByHeightRangeBtn = document.getElementById('fightersByHeightRangeBtn');
-				fightersByHeightRangeBtn.addEventListener('click', async function () {
-					let minHeight = 85;
-					let maxHeight = 90;
-					//Get the function we need to use
-					let getFightersByHeightRange = functions.httpsCallable('fighters-getFightersByHeightRange');
-					//Use it
-					await getFightersByHeightRange({ "minHeight": minHeight, "maxHeight": maxHeight })
-					.then(fighters => {
-						console.log(fighters);
-					})
-					.catch(err => {
-						console.log(err);
-					});
-				});
-				/*###########################################################################*/
-				//All Fighters button
-				let allMethodCountsBtn = document.getElementById('allMethodCountsBtn');
-				allMethodCountsBtn.addEventListener('click', async function () {
-					//Get the function we need to use
-					let getAllMethodCounts = functions.httpsCallable('fights-getAllMethodCounts');
-					//Use it
-					await getAllMethodCounts()
-					.then(fightSet => {
-						console.log(fightSet);
-					})
-					.catch(err => {
-						console.log(err);
-					});
-				});
-				/*###########################################################################*/
-				//All Fighters button
-				let allMethodDefinitionCountsBtn = document.getElementById('allMethodDefinitionCountsBtn');
-				allMethodDefinitionCountsBtn.addEventListener('click', async function () {
-					//Get the function we need to use
-					let getAllMethodDefinitionCounts = functions.httpsCallable('fights-getAllMethodDefinitionCounts');
-					//Use it
-					await getAllMethodDefinitionCounts()
-					.then(fightSet => {
-						console.log(fightSet);
-					})
-					.catch(err => {
-						console.log(err);
-					});
-				});
-				/*###########################################################################*/
-			}
-		</script>
-	</body>
+        resultsDiv.innerHTML = fighters;
+      }
 
+      let fighterData = null;
+      var functions = firebase.functions();
+      window.onload = function() {
+        window.fighterData = null;
+        let results = document.getElementById("results");
+        /*###########################################################################*/
+        //All Fighters button
+        let allFightersBtn = document.getElementById("allFightersBtn");
+        allFightersBtn.addEventListener("click", async function() {
+          //Get the function we need to use
+          let getAllFighters = functions.httpsCallable(
+            "fighters-getAllFighters"
+          );
+          //Use it
+          await getAllFighters()
+            .then(fighters => {
+              dataToArray(results, fighters.data);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        });
+        /*###########################################################################*/
+        //All fights button
+        let allFightsBtn = document.getElementById("allFightsBtn");
+        allFightsBtn.addEventListener("click", async function() {
+          //Get the function we need to use
+          let getAllFights = functions.httpsCallable("fights-getAllFights");
+          //Use it
+          await getAllFights()
+            .then(fights => {
+              dataToArray(results, fights.data);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        });
+        /*###########################################################################*/
+        //Single fighter by id
+        let fighterByIdBtn = document.getElementById("fighterByIdBtn");
+        fighterByIdBtn.addEventListener("click", async function() {
+          let fighterId = prompt(
+            "Enter the fighters Id you would like to search for."
+          );
+          //Get the function we need to use
+          let getFighterById = functions.httpsCallable(
+            "fighters-getFighterById"
+          );
+          //Use it
+          await getFighterById({ fighterId: fighterId })
+            .then(fighter => {
+              dataToArray(results, [fighter]);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        });
+        /*###########################################################################*/
+        //Single fighter by name
+        let fighterByNameBtn = document.getElementById("fighterByNameBtn");
+
+        fighterByNameBtn.addEventListener("click", async function() {
+          let fighterName = prompt(
+            "Enter the fighters name whose info you'd like to display."
+          );
+          //Get the function we need to use
+          let getFighterByName = functions.httpsCallable(
+            "fighters-getFighterByName"
+          );
+
+          //Use it
+          await getFighterByName({ fighterName: fighterName })
+            .then(fighter => {
+              dataToArray(results, [fighter]);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        });
+        /*###########################################################################*/
+        //All Fighters button
+        let fightersByCountryBtn = document.getElementById(
+          "fightersByCountryBtn"
+        );
+        fightersByCountryBtn.addEventListener("click", async function() {
+          let country = prompt(
+            "Enter the country name to list its fighters and press enter"
+          );
+          //Get the function we need to use
+          let getFightersByCountry = functions.httpsCallable(
+            "fighters-getFightersByCountry"
+          );
+          //Use it
+          await getFightersByCountry({ country: country })
+            .then(fighters => {
+              dataToArray(results, fighters.data);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        });
+        /*###########################################################################*/
+        //All Fighters button
+        let fightersByWeightClassBtn = document.getElementById(
+          "fightersByWeightClassBtn"
+        );
+        fightersByWeightClassBtn.addEventListener("click", async function() {
+          let weightClass = prompt(
+            "Enter the fighter weight class whose roster you'd like to see and press enter."
+          );
+          //Get the function we need to use
+          let getFightersByWeightClass = functions.httpsCallable(
+            "fighters-getFightersByWeightClass"
+          );
+          //Use it
+          await getFightersByWeightClass({ weightClass: weightClass })
+            .then(fighters => {
+              dataToArray(results, fighters.data);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        });
+        /*###########################################################################*/
+        //All Fighters button
+        let fightersByWeightRangeBtn = document.getElementById(
+          "fightersByWeightRangeBtn"
+        );
+        fightersByWeightRangeBtn.addEventListener("click", async function() {
+          let minWeight = Number(
+            prompt("Enter the minimum weight of range and press enter.")
+          );
+          let maxWeight = Number(
+            prompt("Enter the maximum weight of the range and press enter.")
+          );
+          //Get the function we need to use
+          let getFightersByWeightRange = functions.httpsCallable(
+            "fighters-getFightersByWeightRange"
+          );
+          //Use it
+          await getFightersByWeightRange({
+            minWeight: minWeight,
+            maxWeight: maxWeight
+          })
+            .then(fighters => {
+              dataToArray(results, fighters.data);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        });
+        /*###########################################################################*/
+        //All Fighters button
+        let fightersByHeightRangeBtn = document.getElementById(
+          "fightersByHeightRangeBtn"
+        );
+        fightersByHeightRangeBtn.addEventListener("click", async function() {
+          let minHeight = Number(
+            prompt("Enter the min height of the range and press enter.")
+          );
+          let maxHeight = Number(
+            prompt("Enter the max height of the range and press enter.")
+          );
+          //Get the function we need to use
+          let getFightersByHeightRange = functions.httpsCallable(
+            "fighters-getFightersByHeightRange"
+          );
+          //Use it
+          await getFightersByHeightRange({
+            minHeight: minHeight,
+            maxHeight: maxHeight
+          })
+            .then(fighters => {
+              fighter(results, fighters.data);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        });
+        //LEFT OFF HERE
+        /*###########################################################################*/
+        //All Fighters button
+        let allMethodCountsBtn = document.getElementById("allMethodCountsBtn");
+        allMethodCountsBtn.addEventListener("click", async function() {
+          //Get the function we need to use
+          let getAllMethodCounts = functions.httpsCallable(
+            "fights-getAllMethodCounts"
+          );
+          //Use it
+          await getAllMethodCounts()
+            .then(fightSet => {
+              console.log(fightSet);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        });
+        /*###########################################################################*/
+        //All Fighters button
+        let allMethodDefinitionCountsBtn = document.getElementById(
+          "allMethodDefinitionCountsBtn"
+        );
+        allMethodDefinitionCountsBtn.addEventListener(
+          "click",
+          async function() {
+            //Get the function we need to use
+            let getAllMethodDefinitionCounts = functions.httpsCallable(
+              "fights-getAllMethodDefinitionCounts"
+            );
+            //Use it
+            await getAllMethodDefinitionCounts()
+              .then(fightSet => {
+                console.log(fightSet);
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          }
+        );
+        /*###########################################################################*/
+      };
+    </script>
+  </body>
 </html>

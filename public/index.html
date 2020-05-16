@@ -79,6 +79,23 @@
       // This variable will hold fighter data we get with the the getAllFighters function.
 
       // Used to print an array of fighters.
+      function winMethodDataToArray(resultsDiv, fighterArray) {
+        let fighters = "";
+
+        if (fighterArray.length == 0) {
+          fighters = "No fighters found";
+        } else {
+          for (let i in fighterArray) {
+            fighters =
+              fighters +
+              JSON.stringify(i + " : " + fighterArray[i]) +
+              "<br><br><br>";
+          }
+        }
+
+        resultsDiv.innerHTML = fighters;
+      }
+      // Used to print an array of fighters.
       function dataToArray(resultsDiv, fighterArray) {
         let fighters = "";
 
@@ -135,8 +152,8 @@
         //Single fighter by id
         let fighterByIdBtn = document.getElementById("fighterByIdBtn");
         fighterByIdBtn.addEventListener("click", async function() {
-          let fighterId = prompt(
-            "Enter the fighters Id you would like to search for."
+          let fighterId = Number(
+            prompt("Enter the fighters Id you would like to search for.")
           );
           //Get the function we need to use
           let getFighterById = functions.httpsCallable(
@@ -273,7 +290,6 @@
               console.log(err);
             });
         });
-        //LEFT OFF HERE
         /*###########################################################################*/
         //All Fighters button
         let allMethodCountsBtn = document.getElementById("allMethodCountsBtn");
@@ -285,7 +301,7 @@
           //Use it
           await getAllMethodCounts()
             .then(fightSet => {
-              console.log(fightSet);
+              winMethodDataToArray(results, fightSet.data);
             })
             .catch(err => {
               console.log(err);
@@ -306,7 +322,7 @@
             //Use it
             await getAllMethodDefinitionCounts()
               .then(fightSet => {
-                console.log(fightSet);
+                winMethodDataToArray(results, fightSet.data);
               })
               .catch(err => {
                 console.log(err);
